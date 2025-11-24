@@ -1,0 +1,61 @@
+# @package _global_
+
+# single_model:
+#   pipeline:
+#     resampler_layer:
+#       _target_: imblearn.over_sampling.SMOTE
+#     model_layer:
+#       class_weight: null
+
+
+# hydra:
+#   sweeper:
+#     params:
+#       single_model.pipeline.model_layer.C: 0.1,1.0,10.0
+#       single_model.pipeline.dim_reduction_layer.n_components: 10,20,36,50
+
+
+
+
+
+single_model:
+  pipeline:
+    # SMOTE enabled
+    resampler_layer:
+      _target_: imblearn.over_sampling.SMOTE
+
+    # Logistic Regression
+    model_layer:
+      _target_: sklearn.linear_model.LogisticRegression
+
+
+hydra:
+  verbose: true
+  sweeper:
+    params:
+
+      single_model.pipeline.gene_mutation_preprocess_layer.include_rare: "true,false"
+      single_model.pipeline.gene_mutation_preprocess_layer.rare_threshold: "20, 50"
+      # ----------------------
+      # MODEL HYPERPARAMETERS
+      # ----------------------
+      single_model.pipeline.model_layer.C: "0.1,1.0,10.0"
+      single_model.pipeline.model_layer.class_weight: "null"  # only null because SMOTE is active
+
+      # ----------------------
+      # DIMENSIONALITY REDUCTION (NMF)
+      # ----------------------
+      single_model.pipeline.dim_reduction_layer.n_components: "10,20,36,50"
+      single_model.pipeline.dim_reduction_layer.max_iter: "500,1000"
+
+      # ----------------------
+      # SMOTE PARAMETERS
+      # ----------------------
+      single_model.pipeline.resampler_layer.sampling_strategy: "auto,0.5,0.75"
+      single_model.pipeline.resampler_layer.k_neighbors: "3,5,7"
+
+      # ----------------------
+      # SCALER
+      # ----------------------
+      single_model.pipeline.scaler_layer.with_mean: "true"
+      single_model.pipeline.scaler_layer.with_std: "true"

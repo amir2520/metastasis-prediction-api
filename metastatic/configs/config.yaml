@@ -1,0 +1,2 @@
+defaults:
+  - single_model: single_model_config_schema
