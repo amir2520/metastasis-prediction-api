@@ -128,7 +128,6 @@ metastasis-prediction-api/
 
 **Related Repositories:**
 - Training Service: *[https://github.com/amir2520/liver_metas]*
-- MLflow Server
 
 > **Note**: This is part of a multi-repository MLOps system. Each microservice is maintained in its own repository for independent deployment and versioning.
 
