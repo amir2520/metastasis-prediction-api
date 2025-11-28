@@ -11,6 +11,7 @@ from mlflow.pyfunc import PythonModel
 from omegaconf import DictConfig, OmegaConf, MISSING
 from metastatic.config_schemas.infrastructure_schemas.mlflow_data_schema import MLflowConfig
 import logging
+import subprocess
 import socket
 import os
 import metastatic
@@ -22,6 +23,9 @@ MLFLOW_TRACKING_URI = os.getenv('MLFLOW_TRACKING_URI')
 if TYPE_CHECKING:
     from metastatic.config_schemas.config_schema import SingleModelConfig
 
+
+def run_shell_command(cmd: str) -> str:
+    return subprocess.run(cmd, text = True, shell = True, check = True, capture_output = True).stdout
 
 
 def get_logger(name: str) -> logging.Logger:
@@ -146,48 +150,3 @@ def log_model(
         )
         mlflow.set_tag("best_run", new_best_run_tag)
 
-
-
-# def log_model(
-#     mlflow_config: MLflowConfig, 
-#     new_best_run_tag: str, 
-#     registered_model_name: str,
-#     trained_pipeline: Any
-# ) -> None:
-#     experiment_name = mlflow_config.experiment_name
-#     run_id = mlflow_config.run_id
-#     run_name = mlflow_config.run_name
-    
-#     client = mlflow.MlflowClient()
-#     experiment = client.get_experiment_by_name(experiment_name)
-    
-#     if experiment:
-#         # Find previous best runs
-#         previous_best = client.search_runs(
-#             experiment_ids=[experiment.experiment_id],
-#             filter_string="tags.best_run LIKE '%'",
-#             order_by=["start_time DESC"]
-#         )
-        
-#         # Remove tag and delete model artifacts from previous best runs
-#         for run in previous_best:
-#             # Delete the tag
-#             client.delete_tag(run.info.run_id, "best_run")
-            
-#             # Delete the model artifacts
-#             try:
-#                 artifacts = client.list_artifacts(run.info.run_id)
-#                 for artifact in artifacts:
-#                     # This deletes the artifact from the run
-#                     client.delete_artifact(run.info.run_id, artifact.path)
-#             except Exception as e:
-#                 print(f"Could not delete artifacts for run {run.info.run_id}: {e}")
-    
-#     # Log the new best model
-#     with activate_mlflow(experiment_name=experiment_name, run_id=run_id, run_name=run_name) as _:
-#         mlflow.sklearn.log_model(
-#             sk_model=trained_pipeline,
-#             artifact_path="model",
-#             registered_model_name=registered_model_name
-#         )
-#         mlflow.set_tag("best_run", new_best_run_tag)
