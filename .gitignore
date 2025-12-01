@@ -118,6 +118,8 @@ venv.bak/
 .envs/.gcp
 .envs/.mlflow_prod
 .envs/.uvicorn
+.envs/.dataset_gcp_project
+.envs/.mlflow_dev
 
 # Spyder project settings
 .spyderproject
