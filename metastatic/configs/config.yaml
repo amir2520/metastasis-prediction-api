@@ -1,2 +1,16 @@
 defaults:
   - single_model: single_model_config_schema
+  - dask_cluster: gcp_dask_cluster
+  - override hydra/launcher: joblib
+
+
+single_model:
+  infrastructure:
+    data:
+      version: v3
+
+hydra:
+  launcher:
+    n_jobs: 2
+    backend: loky
+

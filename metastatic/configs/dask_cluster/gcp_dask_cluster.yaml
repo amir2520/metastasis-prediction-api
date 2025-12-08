@@ -1,0 +1,17 @@
+defaults:
+  - dask_gcp_cluster_schema
+
+machine_type: n1-standard-1
+docker_image: ${oc.env:DOCKER_WORKER_IMAGE}
+docker_args: >
+  --log-driver=gcplogs
+n_workers: 3
+worker_options:
+  nthreads: 1
+preemptible: false
+env_vars: 
+  GOOGLE_APPLICATION_CREDENTIALS: "/app/creds/metas-project-8b1a906b4b86.json"
+  MLFLOW_TRACKING_URI: "http://10.142.0.47:6100"
+scheduler_options:
+  dashboard_address: ':8787'
+security: false

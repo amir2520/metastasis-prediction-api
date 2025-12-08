@@ -1,5 +1,7 @@
 from typing import Optional, Union, Any, Iterable, TYPE_CHECKING, Generator
 import dataclasses
+from dataclasses import asdict
+import importlib
 import numpy as np
 import scipy.sparse as sp
 from sklearn.base import BaseEstimator, TransformerMixin
@@ -150,3 +152,26 @@ def log_model(
         )
         mlflow.set_tag("best_run", new_best_run_tag)
 
+
+def custom_instantiate(config: Any) -> Any:
+    if isinstance(config, DictConfig):
+        config_as_dict = OmegaConf.to_container(config, resolve=True)
+    else:
+        config_as_dict = asdict(config)
+    # config_as_dict = asdict(config)
+    if "_target_" not in config_as_dict:
+        raise ValueError("config does not have _target_ key")
+
+    _target_ = config_as_dict['_target_']
+    _partial_ = config_as_dict.get('_partial_', False)
+
+    config_as_dict.pop('_target_', None)
+    config_as_dict.pop('_partial_', None)
+    splitted_target = _target_.split('.')
+    module_name, class_name = '.'.join(splitted_target[:-1]), splitted_target[-1]
+
+    module = importlib.import_module(module_name)
+    _class = getattr(module, class_name)
+    if _partial_:
+        return partial(_class, **config_as_dict)
+    return _class(**config_as_dict)

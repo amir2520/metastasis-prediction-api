@@ -1,0 +1,24 @@
+# .dockerignore
+.git
+.gitignore
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.log
+mlruns/
+mlflow-artifact-store/
+outputs/
+multirun/   
+.hydra/
+*.csv
+data/
