@@ -2,7 +2,7 @@
 name = "metastatic_models"
 version = "0.1.0"
 description = "model to predict probability of liver metastasis using mutation information"
-authors = ["Amir Fatemi <amir2520@gmail.com>"]
+authors = ["Amir Fatemi <hossein.fatemi85@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
